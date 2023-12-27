@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nested Divs</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"
+      integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N"
+      crossorigin="anonymous"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Alegreya&family=BioRhyme:wght@700&display=swap");
+    </style>
+  </head>
+  <body>
+    <script>
+      // Specify the number of nested divs you want
+      // const numberOfDivs = 6;
+
+      // Get the parent container where you want to append the nested divs
+      let parentContainer = document.body; // You can replace this with the actual container element you want
+
+      var container_div = document.createElement("div");
+      container_div.setAttribute("class", "container");
+
+      // Create the new div with rows class
+      var row = document.createElement("div");
+      row.setAttribute("class", "row");
+      var bind_url;
+
+      // Rest Countries API fetch
+      fetch("https://restcountries.com/v3.1/all")
+        .then((response) => {
+          // console.log("data fetched");
+          return response.json();
+        })
+        .catch(() => {
+          console.log("not feteched");
+        })
+        .then((data) => {
+          // console.log(data);exit;
+          var data_len = data.length;
+         
+
+          // for (i = 0; i < data_len; i++) {
+            // For of loop to get the values of specified object
+            // for (var C_name of Object.values(data[i].name.nativeName)) {
+            //   var name = C_name.common;
+            // }
+            data.forEach((ele) => {
+            // var capital = data[i].capital;
+            // var flag = data[i].flags.png;
+            // var region = data[i].region;
+            // var lat = data[i].latlng[0];
+            // var lng = data[i].latlng[1];
+            // var country_code = data[i].cca3;
+            var lat = ele.latlng[0]
+            var lng = ele.latlng[1]
+            var flag = ele.flags.png;
+            var region = ele.region;
+            var country_code = ele.cca3;
+            var capital = ele.capital;
+
+            var cols = document.createElement("div");
+            cols.setAttribute("class", "col-lg-4  col-sm-12");
+
+            // Create the card div with Bootstrap classes
+            var card = document.createElement("div");
+            // card.setAttribute("class","card mt-2"); either
+            card.classList.add("card", "mt-2");
+
+            //  Create the card header div
+            var card_header = document.createElement("div");
+            // card_header.setAttribute("class","card-header  d-flex justify-content-center"); either
+            card_header.classList.add(
+              "card-header",
+              "d-flex",
+              "justify-content-center"
+            );
+            card_header.textContent = name;
+
+            // To create the Card body
+            var card_body = document.createElement("div");
+            card_body.setAttribute("class", "card-body");
+
+            // Card title with inside imge tag to center the  image
+            var card_title = document.createElement("h5");
+            card_title.setAttribute("class", "card-title");
+
+            var image = document.createElement("img");
+            // Set attributes for the image
+            image.src = flag; // Set the path to your image
+            image.alt = "flag";
+            image.setAttribute("class", "image");
+            card_title.appendChild(image);
+
+            // Create the paragraph tag
+            var p = document.createElement("p");
+            p.setAttribute("class", "card-text");
+            p.innerHTML = `<b>Capital: ${capital}<br>Region: ${region}<br>Country Code: ${country_code}<br>Latitude: ${lat}<br>Longitude: ${lng}</b>`;
+
+            
+
+            // Create the button div with a link button
+            var button_div = document.createElement("button");
+            button_div.id = "button";
+            button_div.innerText = "Wheather_details";
+            // button_div.addEventListener("click", fetch_data(lat,lng));
+            button_div.classList.add("btn", "btn-outline-secondary");
+
+            button_div.addEventListener("click", function() {
+                    fetch_data(lat, lng);
+                });
+
+          
+
+            // AddeventListner to onclick event
+           
+             
+            // Get the response data from the api using fetch method. To show the wheather
+            //  in seperate container
+
+
+            // Appending Nested elements from inside to outside (or) Append elements to build the hierarchy
+            card_body.appendChild(card_title);
+            card_body.appendChild(p);
+            card_body.appendChild(button_div);
+
+            card.appendChild(card_header);
+            card.appendChild(card_body);
+
+            cols.appendChild(card);
+            row.appendChild(cols);
+            container_div.append(row);
+
+            //  Append the main container to the body of the document
+            document.body.append(container_div);
+            parentContainer = container_div;
+          })
+        }
+      )
+
+         // Wheather API fetch
+         var api_key = "dd233cc1d3570bad7488dadc51d7e682";
+     
+     
+
+        function fetch_data(lat,lng) {
+          console.log(lat,lng)
+          var base_url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${api_key}`;
+              fetch(base_url)
+                .then((response) => response.json())
+                .then((data) => {
+                  console.log(data);  
+                  alert(data.name)          
+                })
+                .catch((error) => console.error("Error:", error));
+              // alert("close");
+            }
+    </script>
+  </body>
+</html>
